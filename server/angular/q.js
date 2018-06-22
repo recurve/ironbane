@@ -1,4 +1,4 @@
-var Q = Meteor.npmRequire('q');
+var Q = require('q');
 
 angular
     .module('ng')

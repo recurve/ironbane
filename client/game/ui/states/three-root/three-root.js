@@ -1,7 +1,12 @@
+import angular from 'angular';
+import angularMeteor from 'angular-meteor';
+import uiRouter from 'angular-ui-router';
+
 angular
     .module('game.ui.states.three-root', [
+		angularMeteor,
+		uiRouter,
         'ces',
-        'ui.router',
         'angular-meteor',
         'global.constants',
         'game.ui.directives',

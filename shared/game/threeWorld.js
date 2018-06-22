@@ -214,8 +214,8 @@ angular
                     } else {
                         var loadFile = function() {
                             var deferred = $q.defer(),
-                                path = Meteor.npmRequire('path'),
-                                fs = Meteor.npmRequire('fs'),
+                                path = require('path'),
+                                fs = require('fs'),
                                 // TODO: move these filepaths to SERVER ONLY constants
                                 meteorBuildPath = path.resolve('.') + '/',
                                 meteorBuildPublicPath = meteorBuildPath + '../web.browser/app/',
@@ -224,7 +224,7 @@ angular
 
                             // $log.log('loading...', filePath);
 
-                            fs.readFile(filePath, 'utf8', function(err, data) {
+                            fs.readFile(filePath, 'utf8', Meteor.bindEnvironment(function(err, data) {
                                 //$log.log(sceneName, ': [err]', err, ' [data]: ', !!data);
                                 if (err) {
                                     //if (err.code !== 'ENOENT') {
@@ -237,7 +237,7 @@ angular
                                         deferred.reject(e);
                                     }
                                 }
-                            });
+                            }));
 
                             return deferred.promise;
                         };

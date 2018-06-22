@@ -1,9 +1,14 @@
+import angular from 'angular';
+import angularMeteor from 'angular-meteor';
+import uiRouter from 'angular-ui-router';
+
 angular
     .module('game.ui.dialog', [
+		    angularMeteor,
+		    uiRouter,
         'ui.bootstrap',
         'global.constants',
-        'angular-meteor',
-        'ngSanitize'
+        require('angular-sanitize')
     ])
     .service('dialogService', [
         '$modal',

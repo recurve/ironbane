@@ -1,10 +1,11 @@
+import uiRouter from 'angular-ui-router';
+
 angular
     .module('game.ui.states.three-root.main-menu.buy', [
         'game.ui.dialog',
         'global.constants',
-        'ui.router',
+        uiRouter,
         'models.accounts',
-        'braintree-angular',
         'engine.char-builder'
     ])
     .config(["$stateProvider", function($stateProvider) {

@@ -55,10 +55,10 @@ angular
                     return;
                 }
 
-                var files = [config.path + '.ogg', config.path + '.mp3', config.path + '.wav'],
+                var files = [config.path + '.mp3', config.path + '.webm', config.path + '.ogg', config.path + '.wav'],
                     volume = _getVolume(name),
                     sound = new Howl({
-                        urls: files,
+                        src: files,
                         loop: config.loop,
                         buffer: config.type === 'music',
                         onload: function() {

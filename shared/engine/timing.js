@@ -84,8 +84,15 @@ angular
             this.elapsed = this.frameTime = Number.MIN_VALUE;
 
             this.step = function() {
-                var current = $window.performance.now(),
-                    frame = (current - _last) / 1000.0;
+                var current = null;
+                if ($window.performance) {
+	                current = $window.performance.now();
+                } else {
+                	current = Date.now(); // Aaron - this cannot be right but leaving it
+                }
+
+                
+            	var frame = (current - _last) / 1000.0;
 
                 this.timestamp = current;
                 this.frameTime = Math.min(frame, _maxStep) * _scale;

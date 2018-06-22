@@ -246,9 +246,9 @@ angular
                     // });
 
                     // Set up streams and make sure it reruns everytime we change levels or change user
-                    // $meteor.autorun is linked to $scope which we don't have here,
-                    // so Meteor.autorun is the only way AFAIK
-                    Meteor.autorun(function () {
+                    // $Tracker.autorun is linked to $scope which we don't have here,
+                    // so Tracker.autorun is the only way AFAIK
+                    Tracker.autorun(function () {
                         var status = Meteor.status();
 
                         if (!status.connected) {
@@ -260,7 +260,7 @@ angular
                         }
                     })
 
-                    Meteor.autorun(function() {
+                    Tracker.autorun(function() {
 
                         if (!Meteor.user()) {
                             return;

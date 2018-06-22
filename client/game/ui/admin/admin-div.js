@@ -1,7 +1,12 @@
+import angular from 'angular';
+import angularMeteor from 'angular-meteor';
+import uiRouter from 'angular-ui-router';
+
 angular.module('game.ui.admin.adminDiv', [
+		angularMeteor,
+		uiRouter,
         'game.clientSettings',
-        'global.constants',
-        'angular-meteor'
+        'global.constants'
     ])
     .directive('adminDiv', function() {
             'use strict';

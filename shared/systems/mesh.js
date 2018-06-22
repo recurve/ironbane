@@ -120,7 +120,7 @@ angular
 
                         if (Meteor.isServer && process.env.BUILDNAVNODES) {
                             var zoneNodes = NavNodes[sceneName];
-                            var fs = Meteor.npmRequire('fs');
+                            var fs = require('fs');
                             var script = 'NavNodes["' + sceneName + '"] = ' + JSON.stringify(zoneNodes) + ';';
                             var base = process.env.PWD
                             var outputFilename = base + '/shared/navNodes/' + sceneName + '.js';

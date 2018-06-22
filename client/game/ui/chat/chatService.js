@@ -1,5 +1,10 @@
+import angular from 'angular';
+import angularMeteor from 'angular-meteor';
+import uiRouter from 'angular-ui-router';
+
 angular.module('game.ui.chat.chatService', [
-        'angular-meteor',
+		angularMeteor,
+		uiRouter,
         'models.chatMessages',
         'game.ui.bigMessages.bigMessagesService',
         'game.ui.dialog'

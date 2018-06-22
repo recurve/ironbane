@@ -42,7 +42,14 @@ angular
                     }
                     this._strength = strength;
 
-                    this._config = REGEN_STR[angular.lowercase(strength)];
+					var toLowerCaseFunction = function(text) {
+						if (text) {
+							text = text.toLowerCase();
+						}
+						return text;
+					}                            
+
+                    this._config = REGEN_STR[toLowerCaseFunction(strength)];
                 }
 
                 onUse(item, entity) {
@@ -79,7 +86,15 @@ angular
                             inv[slot].behavior.forEach(function(b) {
                                 var parts = b.split(' ');
                                 if (parts[0] === 'HealthRegen') {
-                                    others.push(REGEN_STR[angular.lowercase(parts[1].trim())]);
+                                
+									var toLowerCaseFunction = function(text) {
+										if (text) {
+											text = text.toLowerCase();
+										}
+										return text;
+									}                            
+                                
+                                    others.push(REGEN_STR[toLowerCaseFunction(parts[1].trim())]);
                                 }
                             });
                         }

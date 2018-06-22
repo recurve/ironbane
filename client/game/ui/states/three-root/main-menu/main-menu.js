@@ -1,7 +1,11 @@
+import angular from 'angular';
+import angularMeteor from 'angular-meteor';
+import uiRouter from 'angular-ui-router';
+
 angular
     .module('game.ui.states.three-root.main-menu', [
-        'ui.router',
-        'angular-meteor',
+		angularMeteor,
+		uiRouter,
         'game.ui.states.three-root.main-menu.enter-world',
         'game.ui.states.three-root.main-menu.create-char',
         'game.ui.states.three-root.main-menu.login',

@@ -27,23 +27,30 @@ angular
 
                     this._amount = 0;
 
-                    if (angular.lowercase(strength) === 'weak') {
+					var toLowerCaseFunction = function(text) {
+						if (text) {
+							text = text.toLowerCase();
+						}
+						return text;
+					}                            
+
+                    if (toLowerCaseFunction(strength) === 'weak') {
                         this._amount = 0.25;
                     }
 
-                    if (angular.lowercase(strength) === 'normal') {
+                    if (toLowerCaseFunction(strength) === 'normal') {
                         this._amount = 0.5;
                     }
 
-                    if (angular.lowercase(strength) === 'strong') {
+                    if (toLowerCaseFunction(strength) === 'strong') {
                         this._amount = 1;
                     }
 
-                    if (angular.lowercase(strength) === 'epic') {
+                    if (toLowerCaseFunction(strength) === 'epic') {
                         this._amount = 1.5;
                     }
 
-                    if (angular.lowercase(strength) === 'legendary') {
+                    if (toLowerCaseFunction(strength) === 'legendary') {
                         this._amount = 2;
                     }
                 }

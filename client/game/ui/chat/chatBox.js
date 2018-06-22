@@ -1,8 +1,13 @@
+import angular from 'angular';
+import angularMeteor from 'angular-meteor';
+import uiRouter from 'angular-ui-router';
+
 angular.module('game.ui.chat.chatBoxDirective', [
-        'angular-meteor',
+		angularMeteor,
+		uiRouter,
         'luegg.directives',
         'game.ui.directives',
-        'game.ui.chat.chatService',
+        'game.ui.chat.chatService'
     ])
     .directive('chatBox', [
         'ChatService',

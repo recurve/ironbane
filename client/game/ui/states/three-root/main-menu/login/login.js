@@ -1,8 +1,12 @@
+import angular from 'angular';
+import angularMeteor from 'angular-meteor';
+import uiRouter from 'angular-ui-router';
+
 angular
     .module('game.ui.states.three-root.main-menu.login', [
-        'ui.router',
-        'game.ui.dialog',
-        'angular-meteor'
+		angularMeteor,
+		uiRouter,
+        'game.ui.dialog'
     ])
     .config(['$stateProvider', function($stateProvider) {
         'use strict';

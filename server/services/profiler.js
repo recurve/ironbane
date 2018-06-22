@@ -2,7 +2,7 @@ angular
     .module('server.services.profiler', [])
     .run(function() {
         if (Meteor.settings.enableProfiler) {
-            Meteor.npmRequire('appdynamics').profile({
+            require('appdynamics').profile({
                 controllerHostName: 'paid139.saas.appdynamics.com',
                 controllerPort: 443, // If SSL, be sure to enable the next line
                 controllerSslEnabled: true, // Optional - use if connecting to controller via SSL

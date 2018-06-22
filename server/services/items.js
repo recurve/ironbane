@@ -12,8 +12,8 @@ angular
         function(ItemsCollection, $q, $log, IB_CONSTANTS) {
             'use strict';
 
-            var parse = Meteor.npmRequire('csv-parse');
-            var request = Meteor.npmRequire('request');
+            var parse = require('csv-parse');
+            var request = require('request');
 
             // we want to seed the item templates from the spreadsheet (csv) every time
             ItemsCollection.remove({});
@@ -25,13 +25,13 @@ angular
                     var parser = parse(text, {
                         delimiter: ',',
                         auto_parse: true
-                    }, function(err, data) {
+                    }, Meteor.bindEnvironment(function(err, data) {
                         if (err) {
                             return deferred.reject(err);
                         }
 
                         deferred.resolve(data);
-                    });
+                    }));
 
                     return parser;
                 }
@@ -39,21 +39,21 @@ angular
                 // assume if there's an http protocol that we're using remote files,
                 // otherwise in the privates
                 if (filename.search(/http/) >= 0) {
-                    request(filename, function(error, response, body) {
+                    request(filename, Meteor.bindEnvironment(function(error, response, body) {
                         if (!error && response.statusCode === 200) {
                             loadCsv(body);
                         } else {
                             deferred.reject(error);
                         }
-                    });
+                    }));
                 } else {
-                    Assets.getText(filename, function(err, text) {
+                    Assets.getText(filename, Meteor.bindEnvironment(function(err, text) {
                         if (err) {
                             return deferred.reject(err);
                         }
 
                         loadCsv(text);
-                    });
+                    }));
                 }
 
                 return deferred.promise;

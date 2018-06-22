@@ -6,8 +6,8 @@ angular
     .service('ContentLoader', ["IB_CONSTANTS", "$q", "IbUtils", function(IB_CONSTANTS, $q, IbUtils) {
         'use strict';
 
-        var parse = Meteor.npmRequire('csv-parse');
-        var request = Meteor.npmRequire('request');
+        var parse = require('csv-parse');
+        var request = require('request');
 
         var itemList = [];
         var npcPrefabs = {};
@@ -29,13 +29,13 @@ angular
                 var parser = parse(text, {
                     delimiter: ',',
                     auto_parse: true
-                }, function(err, data) {
-                    if (err) {
-                        deferred.reject(err);
-                    }
+                }, Meteor.bindEnvironment(function (err, data) {
+					if (err) {
+						deferred.reject(err);
+					}
 
-                    deferred.resolve(data);
-                });
+					deferred.resolve(data);
+				}));
 
                 return parser;
             };
@@ -43,22 +43,22 @@ angular
             // assume if there's an http protocol that we're using remote files,
             // otherwise in the privates
             if (filename.search(/http/) >= 0) {
-                request(filename, function(error, response, body) {
+                request(filename, Meteor.bindEnvironment(function(error, response, body) {
                     var statusCode = response.statusCode;
                     if (!error && statusCode === 200) {
                         load(body);
                     } else {
                         deferred.reject({error, statusCode});
                     }
-                });
+                }));
             } else {
-                Assets.getText(filename, function(err, text) {
+                Assets.getText(filename, Meteor.bindEnvironment(function(err, text) {
                     if (err) {
                         return deferred.reject(err);
                     }
 
                     load(text);
-                });
+                }));
             }
 
             return deferred.promise;
@@ -330,11 +330,14 @@ angular
             }
 
             return $q.all(filesToLoad.map(function(file) {
+console.log("file.... is: " + file);            
                 return loadContent(file);
-            })).then(function(result) {
+            })).then(Meteor.bindEnvironment(function(result) {
                 var npcs = result[0],
                     items = result[1];
-
+// console.log("result.... is: " + result);
+// console.log("items.... is: " + items);
+// console.log("npcs.... is: " + npcs);
                 rawItems = items;
                 rawNpcs = npcs;
 
@@ -345,7 +348,7 @@ angular
 
                 console.log('Loaded ' + rawItems.length + ' items');
                 console.log('Loaded ' + rawNpcs.length + ' NPC prefabs');
-            });
+            }));
         };
 
         this.hasNPCPrefab = function(prefabName) {

@@ -4,8 +4,15 @@ angular
         '$window',
         function($window) {
             'use strict';
-
-            var userAgent = $window.navigator ? angular.lowercase($window.navigator.userAgent || $window.navigator.vendor) : $window.opera || '';
+			
+			var toLowerCaseFunction = function(text) {
+				if (text) {
+					text = text.toLowerCase();
+				}
+				return text;
+			}
+			
+            var userAgent = $window.navigator ? toLowerCaseFunction($window.navigator.userAgent || $window.navigator.vendor) : $window.opera || '';
 
             this.browser = {};
             this.OS = {};

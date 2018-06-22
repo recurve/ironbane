@@ -1,8 +1,10 @@
+import uiRouter from 'angular-ui-router';
+
 angular
     .module('game.ui.states.three-root.main-menu.switch-server', [
         'game.ui.dialog',
         'global.constants',
-        'ui.router',
+        uiRouter,
         'models.accounts'
     ])
     .config(["$stateProvider", function($stateProvider) {

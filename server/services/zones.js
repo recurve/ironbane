@@ -33,8 +33,8 @@ angular
                 'Teleporter'
             ];
 
-            var path = Meteor.npmRequire('path');
-            var walk = Meteor.npmRequire('walkdir');
+            var path = require('path');
+            var walk = require('walkdir');
 
             var meteorBuildPath = path.resolve('.') + '/';
             var meteorBuildPublicPath = meteorBuildPath + '../web.browser/app/';
@@ -61,7 +61,15 @@ angular
                         var registeredSystemName = system + 'System';
                         if ($injector.has(registeredSystemName)) {
                             var Sys = $injector.get(registeredSystemName);
-                            world.addSystem(new Sys(), angular.lowercase(system));
+                            
+							var toLowerCaseFunction = function(text) {
+								if (text) {
+									text = text.toLowerCase();
+								}
+								return text;
+							}                            
+                            
+                            world.addSystem(new Sys(), toLowerCaseFunction(system));
                         } else {
                             console.error(registeredSystemName + ' was not found!');
                         }

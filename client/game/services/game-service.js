@@ -68,7 +68,10 @@ angular
                     var registeredSystemName = system + 'System';
                     if ($injector.has(registeredSystemName)) {
                         var Sys = $injector.get(registeredSystemName);
-                        $rootWorld.addSystem(new Sys(), angular.lowercase(system));
+                        if (system) {
+                          system = system.toLowerCase();
+                        }
+                        $rootWorld.addSystem(new Sys(), system);
                     } else {
                         $log.debug(registeredSystemName + ' was not found!');
                     }

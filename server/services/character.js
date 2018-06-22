@@ -43,7 +43,7 @@ angular
 
             this.create = function(options, pUser) {
                 var user = pUser || Meteor.user();
-                var validator = Meteor.npmRequire('validator');
+                var validator = require('validator');
 
                 var charCount = EntitiesCollection.find({
                     owner: user._id

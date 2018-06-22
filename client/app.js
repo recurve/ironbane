@@ -1,8 +1,13 @@
 'use strict';
 
+import angular from 'angular';
+import angularMeteor from 'angular-meteor';
+import uiRouter from 'angular-ui-router';
+
 angular
     .module('Ironbane', [
-        'angular-meteor',
+		angularMeteor,
+		uiRouter,
         'global.constants',
         'game.ui.states',
         'game.game-loop',
@@ -22,7 +27,6 @@ angular
         'engine.debugger',
         'util.name-gen',
         'game.services.globalsound',
-        'game.services.analytics',
         'global.constants.sound',
         'ngDragDrop'
     ])
@@ -82,9 +86,8 @@ angular
         '$log',
         'IbUtils',
         'GlobalSound',
-        'GoogleAnalytics',
         'EntitiesCollection',
-        function($window, Debugger, IB_CONSTANTS, $rootScope, $meteor, $state, $log, IbUtils, GlobalSound, GoogleAnalytics, EntitiesCollection) {
+        function($window, Debugger, IB_CONSTANTS, $rootScope, $meteor, $state, $log, IbUtils, GlobalSound, EntitiesCollection) {
             // for convenience
             $window.debug = Debugger;
 
@@ -114,20 +117,20 @@ angular
                 $log.debug('$stateNotFound', arguments);
             });*/
 
-
-            GoogleAnalytics.setup();
-            GoogleAnalytics.track();
         }
     ]);
 
 function onReady() {
+    angular.bootstrap(document, ['Ironbane']);
     // We must wait until Ammo is available! See comments in client/lib/lib/ammo.js
     // Hacky, but there is no other way for now.
-    if (window.Ammo) {
-        angular.bootstrap(document, ['Ironbane']);
-    } else {
-        setTimeout(onReady, 10);
-    }
+//     if (window.Ammo) {
+// console.log("yes ammo");
+//         angular.bootstrap(document, ['Ironbane']);
+//     } else {
+// console.log("no ammo");
+//         setTimeout(onReady, 10);
+//     }
 }
 
 if (Meteor.isCordova) {

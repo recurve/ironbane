@@ -113,10 +113,11 @@ angular
 
                     materials = objectLoader.parseMaterials(json.materials, textures);
                 } else {
+                	//$log.debug("json.materials.... is: " + json.materials);
                     materials = objectLoader.parseMaterials(json.materials);
-                    setTimeout(function() {
+                    setTimeout(Meteor.bindEnvironment(function() {
                         deferred.resolve(entity);
-                    }, 0);
+                    }), 0);
                 }
                 //$log.debug('materials: ', materials);
                 entity = this.parseEntity(json.object);

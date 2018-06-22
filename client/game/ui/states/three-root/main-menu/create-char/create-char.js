@@ -1,13 +1,17 @@
+import angular from 'angular';
+import angularMeteor from 'angular-meteor';
+import uiRouter from 'angular-ui-router';
+
 angular
     .module('game.ui.states.three-root.main-menu.create-char', [
-        'angular-meteor',
+		angularMeteor,
+		uiRouter,
         'engine.game-service',
         'engine.char-builder',
         'engine.util',
         'global.constants',
         'game.ui.dialog',
-        'underscore',
-        'ui.router'
+        'underscore'
     ])
     .config([
         '$stateProvider',

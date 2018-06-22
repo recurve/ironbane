@@ -1,7 +1,11 @@
+import angular from 'angular';
+import angularMeteor from 'angular-meteor';
+import uiRouter from 'angular-ui-router';
+
 angular
     .module('game.ui.states.three-root.play', [
-        'ui.router',
-        'angular-meteor',
+		angularMeteor,
+		uiRouter,
         'game.ui.admin.adminDiv',
         'game.ui.debug.debugDiv',
         'game.ui.chat.chatBoxDirective',
@@ -103,7 +107,7 @@ angular
                             })
                         };
 
-                        Meteor.autorun(function () {
+                        Tracker.autorun(function () {
                             var status = Meteor.status();
 
                             if (!status.connected &&

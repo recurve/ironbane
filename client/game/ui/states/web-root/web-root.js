@@ -1,7 +1,11 @@
+import angular from 'angular';
+import angularMeteor from 'angular-meteor';
+import uiRouter from 'angular-ui-router';
+
 angular
     .module('game.ui.states.web-root', [
-        'ui.router',
-        'angular-meteor'
+		angularMeteor,
+		uiRouter
     ])
     .config(['$stateProvider', function($stateProvider) {
         'use strict';

@@ -1,10 +1,9 @@
 angular
     .module('server.services.ironblood', [
         'global.constants',
-        'models.transactions',
-        'server.services.hipchat'
+        'models.transactions'
     ])
-    .run(function(IB_CONSTANTS, HipChat, TransactionsCollection) {
+    .run(function(IB_CONSTANTS, TransactionsCollection) {
         'use strict';
 
         Meteor.methods({
