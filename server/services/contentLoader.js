@@ -23,45 +23,70 @@ angular
         };
 
         var loadContent = function(filename) {
-            var deferred = $q.defer();
-
             var load = function(text) {
-                var parser = parse(text, {
+            	var parser = Meteor.wrapAsync(parse);
+            	var parsedResult = parser(text, {
                     delimiter: ',',
                     auto_parse: true
-                }, Meteor.bindEnvironment(function (err, data) {
-					if (err) {
-						deferred.reject(err);
-					}
-
-					deferred.resolve(data);
-				}));
-
-                return parser;
+                });
+            	return parsedResult;
+            	
+            	
+//                 var parser = parse(text, {
+//                     delimiter: ',',
+//                     auto_parse: true
+//                 }, function (err, data) {
+//                 console.log("Did I get executed?");
+// 					if (err) {
+// 						deferred.reject(err);
+// 					}
+// 
+// 					deferred.resolve(data);
+// 				});
+// 
+//                 return parser;
             };
 
             // assume if there's an http protocol that we're using remote files,
             // otherwise in the privates
+            var data = null;
+            
             if (filename.search(/http/) >= 0) {
-                request(filename, Meteor.bindEnvironment(function(error, response, body) {
-                    var statusCode = response.statusCode;
-                    if (!error && statusCode === 200) {
-                        load(body);
-                    } else {
-                        deferred.reject({error, statusCode});
-                    }
-                }));
-            } else {
-                Assets.getText(filename, Meteor.bindEnvironment(function(err, text) {
-                    if (err) {
-                        return deferred.reject(err);
-                    }
+            
+				var requestSync = Meteor.wrapAsync(function(url, callback) {
+				  request(url, function(error, response, body) {
+					callback(error, {response: response, body: body})
+				  })
+				});
+				var result = requestSync(filename);
+				var statusCode = result.response.statusCode;
 
-                    load(text);
-                }));
+				if (statusCode === 200) {
+					data = load(result.body);
+				} else {
+					throw "Could not fetch: " + filename + " status code: " + statusCode;
+				}
+				
+//                 request(filename, function(error, response, body) {
+//                     var statusCode = response.statusCode;
+//                     if (!error && statusCode === 200) {
+//                         load(body);
+//                     } else {
+//                         deferred.reject({error, statusCode});
+//                     }
+//                 });
+            } else {
+            	throw "fixme: Assets.getText contentLoader.js";
+//                 Assets.getText(filename, function(err, text) {
+//                     if (err) {
+//                         return deferred.reject(err);
+//                     }
+// 
+//                     load(text);
+//                 });
             }
 
-            return deferred.promise;
+            return data;
         };
 
         this.buildInventory = function(inventoryItemNames, equipmentItemNames, gold) {
@@ -328,27 +353,52 @@ angular
                     Meteor.settings.content.items
                 ];
             }
-
-            return $q.all(filesToLoad.map(function(file) {
-console.log("file.... is: " + file);            
+            
+			var filesToLoadtSync = Meteor.wrapAsync(filesToLoad.map, filesToLoad);
+			var filesLoaded = filesToLoadtSync(function(file) {
+				console.log("file.... is: " + file);            
                 return loadContent(file);
-            })).then(Meteor.bindEnvironment(function(result) {
-                var npcs = result[0],
-                    items = result[1];
-// console.log("result.... is: " + result);
+            });
+            console.log("filesLoaded: " + filesLoaded.length );
+            
+			var npcs = filesLoaded[0],
+				items = filesLoaded[1];
+// console.log("result.... is: " + filesLoaded); 
 // console.log("items.... is: " + items);
 // console.log("npcs.... is: " + npcs);
-                rawItems = items;
-                rawNpcs = npcs;
+			rawItems = items;
+			rawNpcs = npcs;
 
-                itemHeaders = rawItems.shift();
-                npcHeaders = rawNpcs.shift();
+			itemHeaders = rawItems.shift();
+			npcHeaders = rawNpcs.shift();
 
-                me.buildNPCPrefabs();
+			me.buildNPCPrefabs();
 
-                console.log('Loaded ' + rawItems.length + ' items');
-                console.log('Loaded ' + rawNpcs.length + ' NPC prefabs');
-            }));
+			console.log('Loaded ' + rawItems.length + ' items');
+			console.log('Loaded ' + rawNpcs.length + ' NPC prefabs');
+            
+            return $q.when(this); 
+
+//             return $q.all(filesToLoad.map(function(file) {
+// console.log("file.... is: " + file);            
+//                 return loadContent(file);
+//             })).then(function(result) {
+//                 var npcs = result[0],
+//                     items = result[1];
+// // console.log("result.... is: " + result);
+// // console.log("items.... is: " + items);
+// // console.log("npcs.... is: " + npcs);
+//                 rawItems = items;
+//                 rawNpcs = npcs;
+// 
+//                 itemHeaders = rawItems.shift();
+//                 npcHeaders = rawNpcs.shift();
+// 
+//                 me.buildNPCPrefabs();
+// 
+//                 console.log('Loaded ' + rawItems.length + ' items');
+//                 console.log('Loaded ' + rawNpcs.length + ' NPC prefabs');
+//             });
         };
 
         this.hasNPCPrefab = function(prefabName) {

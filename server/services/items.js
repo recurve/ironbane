@@ -19,44 +19,74 @@ angular
             ItemsCollection.remove({});
 
             function loadData(filename) {
-                var deferred = $q.defer();
-
+            	console.log("item file.... is: " + filename);      
                 function loadCsv(text) {
-                    var parser = parse(text, {
-                        delimiter: ',',
-                        auto_parse: true
-                    }, Meteor.bindEnvironment(function(err, data) {
-                        if (err) {
-                            return deferred.reject(err);
-                        }
-
-                        deferred.resolve(data);
-                    }));
-
-                    return parser;
+					var parser = Meteor.wrapAsync(parse);
+					var parsedResult = parser(text, {
+						delimiter: ',',
+						auto_parse: true
+					});
+					return parsedResult;
+                
+                
+                
+                
+//                     var parser = parse(text, {
+//                         delimiter: ',',
+//                         auto_parse: true
+//                     }, function(err, data) {
+//                         if (err) {
+//                             return deferred.reject(err);
+//                         }
+// 
+//                         deferred.resolve(data);
+//                     });
+// 
+//                     return parser;
                 }
 
                 // assume if there's an http protocol that we're using remote files,
                 // otherwise in the privates
-                if (filename.search(/http/) >= 0) {
-                    request(filename, Meteor.bindEnvironment(function(error, response, body) {
-                        if (!error && response.statusCode === 200) {
-                            loadCsv(body);
-                        } else {
-                            deferred.reject(error);
-                        }
-                    }));
-                } else {
-                    Assets.getText(filename, Meteor.bindEnvironment(function(err, text) {
-                        if (err) {
-                            return deferred.reject(err);
-                        }
+	            var data = null;
 
-                        loadCsv(text);
-                    }));
+                if (filename.search(/http/) >= 0) {
+					var requestSync = Meteor.wrapAsync(function(url, callback) {
+					  request(url, function(error, response, body) {
+						callback(error, {response: response, body: body})
+					  })
+					});
+					var result = requestSync(filename);
+					var statusCode = result.response.statusCode;
+                
+					if (statusCode === 200) {
+						data = loadCsv(result.body);
+					} else {
+						throw "Could not fetch: " + filename + " status code: " + statusCode;
+					}
+                
+                
+                
+//                     request(filename, function(error, response, body) {
+//                         if (!error && response.statusCode === 200) {
+//                             loadCsv(body);
+//                         } else {
+//                             deferred.reject(error);
+//                         }
+//                     });
+                } else {
+	            	throw "fixme: Assets.getText item.js";
+                
+                
+//                     Assets.getText(filename, function(err, text) {
+//                         if (err) {
+//                             return deferred.reject(err);
+//                         }
+// 
+//                         loadCsv(text);
+//                     });
                 }
 
-                return deferred.promise;
+                return $q.when(data);
             }
 
             function getValue(row, headers, header) {
@@ -87,7 +117,7 @@ angular
 
             console.log('Loading items from spreadsheet');
 
-            loadData(contentFile).then(Meteor.bindEnvironment(function(data) {
+            loadData(contentFile).then(function(data) {
                 var headers, rows;
 
                 rows = data;
@@ -118,7 +148,7 @@ angular
                 });
 
                 console.log('Loaded ' + rows.length + ' items into Meteor collection');
-            }), function(err) {
+            }, function(err) {
                 console.log('Error loading items! ', err.message);
             });
 

@@ -68,14 +68,11 @@ angular
 
             // this one is good for loading a three export
             this.load = function(json, sceneName) {
-
                 // Needed if we want to load levels again, results in strange ObjectLoader errors
                 // otherwise. e.g.  Undefined image
                 if (Meteor.isClient) {
                     THREE.Cache.clear();
                 }
-
-                var deferred = $q.defer();
 
                 objectLoader.texturePath = 'scene/' + sceneName + '/';
 
@@ -87,16 +84,22 @@ angular
                 // Right now we're stuck with r69 which doesn't have the updated objectLoader
                 // so we have to make a distinction here
                 if (Meteor.isClient) {
-
                     json.images.forEach(function(img) {
                         if (!img.originalUrl) {
                             console.error('EntityBuilder: image originalUrl not set!')
                         }
                     });
 
-                    images = objectLoader.parseImages(json.images, function() {
-                        deferred.resolve(entity);
-                    });
+					var parseImagesSync = Meteor.wrapAsync(function(images) {
+					  objectLoader.parseImages(images, function(object) {THREE.DefaultLoadingManager.onLoad(object);})
+					}, objectLoader);
+
+					var parseImagesSync = Meteor.wrapAsync(objectLoader.parseImages, objectLoader);
+					images = parseImagesSync(json.images);
+
+//                     images = objectLoader.parseImages(json.images, function() {
+//                         deferred.resolve(entity);
+//                     });
                     textures = objectLoader.parseTextures(json.textures, images);
 
 
@@ -115,16 +118,16 @@ angular
                 } else {
                 	//$log.debug("json.materials.... is: " + json.materials);
                     materials = objectLoader.parseMaterials(json.materials);
-                    setTimeout(Meteor.bindEnvironment(function() {
-                        deferred.resolve(entity);
-                    }), 0);
+//                     setTimeout(function() {
+//                         deferred.resolve(entity);
+//                     }, 0);
                 }
                 //$log.debug('materials: ', materials);
                 entity = this.parseEntity(json.object);
                 entity = this.postProcessEntity(entity, geometries, materials, sceneName);
                 entity.isLoadedFromJsonFile = true;
 
-                return deferred.promise;
+                return $q.when(entity);
             };
 
             // this one is handy for just building in code not from export

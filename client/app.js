@@ -87,10 +87,12 @@ angular
         'IbUtils',
         'GlobalSound',
         'EntitiesCollection',
-        function($window, Debugger, IB_CONSTANTS, $rootScope, $meteor, $state, $log, IbUtils, GlobalSound, EntitiesCollection) {
+        '$trace',
+        function($window, Debugger, IB_CONSTANTS, $rootScope, $meteor, $state, $log, IbUtils, GlobalSound, EntitiesCollection, $trace) {
             // for convenience
             $window.debug = Debugger;
-
+			$trace.enable('TRANSITION'); 
+			
             var entities = EntitiesCollection;
 
             // If we don't wrap this, AUTH_REQUIRED error is thrown in incognito/first timers
