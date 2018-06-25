@@ -57,9 +57,17 @@ angular
                     added: function(user) {
                         var streamName = IbUtils.shortMD5(user._id);
 
-                        if (!streams[streamName]) {
-                            streams[streamName] = new Meteor.Stream(streamName);
+                        var stream = streams[streamName];
+
+                        if ( ! stream) {
+                            stream = new Meteor.Streamer(streamName);
+                            streams[streamName] = stream;
                         }
+
+                        // Aaron - broad settings until the player is added
+                        // to the game world and then we'll get stricter.
+                        stream.allowRead('all');
+                        stream.allowWrite('all');
                     }
                 });
             }, 0);
@@ -270,14 +278,11 @@ angular
 
                         entity.stream = streams[streamName];
 
-                        entity.stream.resetListeners();
-
-                        entity.stream.permissions.write(function() {
+                        entity.stream.allowWrite(function() {
                             return this.userId === entity.owner;
                         });
 
-                        // can read anything the server sends
-                        entity.stream.permissions.read(function() {
+                        entity.stream.allowRead(function() {
                             return this.userId === entity.owner;
                         });
 

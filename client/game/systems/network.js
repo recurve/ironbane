@@ -268,9 +268,7 @@ angular
 
                         var streamName = IbUtils.shortMD5(Meteor.userId());
 
-                        me._stream = new Meteor.Stream(streamName);
-                        me._stream.resetListeners();
-
+                        me._stream = new Meteor.Streamer(streamName);
                         me._stream.on('transforms', function (packet) {
                             var netEntities = world.getEntities('netRecv');
 

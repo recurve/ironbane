@@ -36,3 +36,4 @@ angular-templates
 baursn:accounts-guest
 dburles:mongo-collection-instances
 netanelgilad:angular-server
+rocketchat:streamer
