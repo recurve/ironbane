@@ -55,7 +55,7 @@ angular
                     'profile.server.id': Meteor.settings.server.id
                 }).observe({
                     added: function(user) {
-                        var streamName = IbUtils.shortMD5(user._id);
+                        var streamName = user._id;
 
                         var stream = streams[streamName];
 
@@ -269,7 +269,7 @@ angular
                     });
 
                     world.entityAdded('netSend', 'player').add(function (entity) {
-                        var streamName = IbUtils.shortMD5(entity.owner);
+                        var streamName = entity.owner;
 
                         if (!streams[streamName]) {
                             console.error('stream not found:', streamName);

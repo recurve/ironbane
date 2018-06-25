@@ -266,7 +266,7 @@ angular
                             return;
                         }
 
-                        var streamName = IbUtils.shortMD5(Meteor.userId());
+                        var streamName = Meteor.userId();
 
                         me._stream = new Meteor.Streamer(streamName);
                         me._stream.on('transforms', function (packet) {
