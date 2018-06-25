@@ -511,6 +511,10 @@ angular
                     btVec3a.setValue(impulse.x, impulse.y, impulse.z);
                     var rigidBodyComponent = entity.getComponent('rigidBody');
                     if (rigidBodyComponent && rigidBodyComponent.rigidBody) {
+                    	// Aaron - must first set linear velocity to zero.
+                    	// If you don't, then it will += and doing things like 
+                    	// jump will go crazy and jump you out of the world. 
+                        rigidBodyComponent.rigidBody.setLinearVelocity(new THREE.Vector3(0, 0, 0));                    
                         rigidBodyComponent.rigidBody.applyCentralImpulse(btVec3a);
                     }
                 },
